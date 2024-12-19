@@ -63,6 +63,9 @@
   command: "{{ airflow_executable }} initdb"
   become: true
   become_user: "{{ airflow_user }}"
+  environment:
+    AIRFLOW_HOME: "{{ airflow_app_home }}"
+    AIRFLOW_CONFIG: "{{ airflow_conf_path }}/airflow.cfg"
   when:
     - airflow_version is version( '2.0.0', '<')
     - (airflow_install.changed or airflow_config.changed)
@@ -76,6 +79,9 @@
   command: "{{ airflow_executable }} db init"
   become: true
   become_user: "{{ airflow_user }}"
+  environment:
+    AIRFLOW_HOME: "{{ airflow_app_home }}"
+    AIRFLOW_CONFIG: "{{ airflow_conf_path }}/airflow.cfg"
   when:
     - airflow_version is version( '2.0.0', '>=')
     - airflow_install.changed or airflow_config.changed
@@ -114,6 +120,9 @@
   command: "{{ airflow_executable }} variables -s {{ item.key }} {{ item.value }}"
   become: true
   become_user: "{{ airflow_user }}"
+  environment:
+    AIRFLOW_HOME: "{{ airflow_app_home }}"
+    AIRFLOW_CONFIG: "{{ airflow_conf_path }}/airflow.cfg"
   with_items: "{{ airflow_admin_variables }}"
   tags:
     - skip_ansible_lint
@@ -125,6 +134,9 @@
   {% endfor %}"
   become: true
   become_user: "{{ airflow_user }}"
+  environment:
+    AIRFLOW_HOME: "{{ airflow_app_home }}"
+    AIRFLOW_CONFIG: "{{ airflow_conf_path }}/airflow.cfg"
   with_items: "{{ airflow_admin_connections }}"
   tags:
     - skip_ansible_lint

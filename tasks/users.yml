@@ -6,6 +6,9 @@
   command: "{{ airflow_executable }} users list"
   register: airflow_check_users
   changed_when: false
+  environment:
+    AIRFLOW_HOME: "{{ airflow_app_home }}"
+    AIRFLOW_CONFIG: "{{ airflow_conf_path }}/airflow.cfg"
   when: airflow_version is version( '2.0.0', '>=')
   no_log: true
 
@@ -31,6 +34,9 @@
       - "{{ item.email }}"
   no_log: true
   with_items: "{{ airflow_admin_users }}"
+  environment:
+    AIRFLOW_HOME: "{{ airflow_app_home }}"
+    AIRFLOW_CONFIG: "{{ airflow_conf_path }}/airflow.cfg"
   when:
     - airflow_version is version( '2.0.0', '>=')
     - "item.email not in airflow_check_users.stdout"
@@ -57,6 +63,9 @@
       - "{{ item.email }}"
   no_log: true
   with_items: "{{ airflow_regular_users }}"
+  environment:
+    AIRFLOW_HOME: "{{ airflow_app_home }}"
+    AIRFLOW_CONFIG: "{{ airflow_conf_path }}/airflow.cfg"
   when:
     - airflow_version is version( '2.0.0', '>=')
     - airflow_regular_users is defined
