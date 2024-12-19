@@ -76,7 +76,7 @@ airflow_log_format: "[%%(asctime)s] {{ '{' }}%%(filename)s:%%(lineno)d{{ '}' }} 
 airflow_simple_log_format: >
   %%(asctime)s %%(levelname)s - %%(message)s
 airflow_task_log_prefix_template:
-airflow_log_filename_template: "{% raw %}dag_id={{ ti.dag_id }}/run_id={{ ti.run_id }}/task_id={{ ti.task_id }}/{% if ti.map_index >= 0 %}map_index={{ ti.map_index }}/{% endif %}attempt={{ try_number }}.log{% endraw %}"
+airflow_log_filename_template: "{% raw %}dag_id={{ ti.dag_id }}/run_id={{ ti.run_id }}/task_id={{ ti.task_id }}/{%% if ti.map_index >= 0 %%}map_index={{ ti.map_index }}/{%% endif %%}attempt={{ try_number }}.log{% endraw %}"
 airflow_log_processor_filename_template: "{{ '{{' }} filename {{ '}}' }}.log"
 airflow_dag_processor_manager_log_location: "{{ airflow_logs_folder }}/dag_processor_manager/dag_processor_manager.log"
 airflow_task_log_reader: task
