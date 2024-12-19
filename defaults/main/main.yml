@@ -16,7 +16,7 @@ airflow_python_version:
 
 # Because problems with some pip versions, we added this option to choose what version the role should install.
 # See https://airflow.apache.org/docs/apache-airflow/stable/installation.html#installation-tools
-airflow_pip_version: 20.2.4
+airflow_pip_version: 24.3.1
 
 # Airflow url to download the correct version
 airflow_constraint_url: "https://raw.githubusercontent.com/apache/airflow/constraints-{{ airflow_version }}/constraints-{{ airflow_python_version }}.txt"
@@ -115,6 +115,7 @@ airflow_default_required_libs:
   - python3-setuptools
   - python3-pip
   - python3-virtualenv
+  - cargo
   # Taken from: https://airflow.apache.org/docs/apache-airflow/stable/installation/dependencies.html#debian-bookworm-12
   - apt-utils
   - ca-certificates
