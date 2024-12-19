@@ -23,62 +23,6 @@ default_timezone = {{ airflow_default_timezone }}
 # full import path to the class when using a custom executor.
 executor = {{ airflow_executor }}
 
-# The SqlAlchemy connection string to the metadata database.
-# SqlAlchemy supports many different database engines.
-# More information here:
-# http://airflow.apache.org/docs/apache-airflow/stable/howto/set-up-database.html#database-uri
-sql_alchemy_conn = {{ airflow_database_conn }}
-
-# The encoding for the databases
-sql_engine_encoding = {{ airflow_database_engine_encoding }}
-
-# Collation for ``dag_id``, ``task_id``, ``key`` columns in case they have different encoding.
-# This is particularly useful in case of mysql with utf8mb4 encoding because
-# primary keys for XCom table has too big size and ``sql_engine_collation_for_ids`` should
-# be set to ``utf8mb3_general_ci``.
-# sql_engine_collation_for_ids =
-{% if airflow_database_engine_collation_for_ids %}sql_engine_collation_for_ids = {{ airflow_database_engine_collation_for_ids }}{% endif %}
-
-# If SqlAlchemy should pool database connections.
-sql_alchemy_pool_enabled = {{ airflow_database_pool_enabled }}
-
-# The SqlAlchemy pool size is the maximum number of database connections
-# in the pool. 0 indicates no limit.
-sql_alchemy_pool_size = {{ airflow_database_pool_size }}
-
-# The maximum overflow size of the pool.
-# When the number of checked-out connections reaches the size set in pool_size,
-# additional connections will be returned up to this limit.
-# When those additional connections are returned to the pool, they are disconnected and discarded.
-# It follows then that the total number of simultaneous connections the pool will allow
-# is pool_size + max_overflow,
-# and the total number of "sleeping" connections the pool will allow is pool_size.
-# max_overflow can be set to ``-1`` to indicate no overflow limit;
-# no limit will be placed on the total number of concurrent connections. Defaults to ``10``.
-sql_alchemy_max_overflow = {{ airflow_database_max_overflow }}
-
-# The SqlAlchemy pool recycle is the number of seconds a connection
-# can be idle in the pool before it is invalidated. This config does
-# not apply to sqlite. If the number of DB connections is ever exceeded,
-# a lower config value will allow the system to recover faster.
-airflow_database_pool_recycle = {{ airflow_database_pool_recycle }}
-
-# Check connection at the start of each connection pool checkout.
-# Typically, this is a simple statement like "SELECT 1".
-# More information here:
-# https://docs.sqlalchemy.org/en/13/core/pooling.html#disconnect-handling-pessimistic
-sql_alchemy_pool_pre_ping = {{ airflow_database_pool_pre_ping }}
-
-# The schema to use for the metadata database.
-# SqlAlchemy supports databases with the concept of multiple schemas.
-sql_alchemy_schema = {{ airflow_database_schema }}
-
-# Import path for connect args in SqlAlchemy. Defaults to an empty dict.
-# This is useful when you want to configure db engine args that SqlAlchemy won't parse
-# in connection string.
-# See https://docs.sqlalchemy.org/en/13/core/engines.html#sqlalchemy.create_engine.params.connect_args
-# sql_alchemy_connect_args =
-{% if airflow_database_connect_args %}sql_alchemy_connect_args = {{ airflow_database_connect_args }}{% endif %}
 
 # This defines the maximum number of task instances that can run concurrently in Airflow
 # regardless of scheduler count and worker count. Generally, this value is reflective of
@@ -89,7 +33,7 @@ parallelism = {{ airflow_parallelism }}
 # the number of tasks that is running concurrently for a DAG, add up the number of running
 # tasks for all DAG runs of the DAG. This is configurable at the DAG level with ``concurrency``,
 # which is defaulted as ``dag_concurrency``.
-dag_concurrency = {{ airflow_dag_concurrency }}
+max_active_tasks_per_dag = {{ airflow_dag_concurrency }}
 
 # Are DAGs paused by default at creation
 dags_are_paused_at_creation = {{ airflow_dags_are_paused_at_creation }}
@@ -208,11 +152,6 @@ lazy_load_plugins = {{ airflow_lazy_load_plugins }}
 # loaded from module.
 lazy_discover_providers = {{ airflow_lazy_discover_providers }}
 
-# Number of times the code should be retried in case of DB Operational Errors.
-# Not all transactions will be retried as it can cause undesired state.
-# Currently it is only used in ``DagFileProcessor.process_file`` to retry ``dagbag.sync_to_db``.
-max_db_retries = {{ airflow_max_db_retries }}
-
 # Hide sensitive Variables or Connection extra json keys from UI and task logs when set to True
 #
 # (Connection passwords are always hidden in logs)
@@ -221,6 +160,70 @@ hide_sensitive_var_conn_fields = {{ airflow_hide_sensitive_var_conn_fields }}
 # A comma-separated list of extra sensitive keywords to look for in variables names or connection's
 # extra JSON.
 sensitive_var_conn_names = {{ airflow_sensitive_var_conn_names }}
+
+[database]
+
+# The SqlAlchemy connection string to the metadata database.
+# SqlAlchemy supports many different database engines.
+# More information here:
+# http://airflow.apache.org/docs/apache-airflow/stable/howto/set-up-database.html#database-uri
+sql_alchemy_conn = {{ airflow_database_conn }}
+
+# The encoding for the databases
+sql_engine_encoding = {{ airflow_database_engine_encoding }}
+
+# Collation for ``dag_id``, ``task_id``, ``key`` columns in case they have different encoding.
+# This is particularly useful in case of mysql with utf8mb4 encoding because
+# primary keys for XCom table has too big size and ``sql_engine_collation_for_ids`` should
+# be set to ``utf8mb3_general_ci``.
+# sql_engine_collation_for_ids =
+{% if airflow_database_engine_collation_for_ids %}sql_engine_collation_for_ids = {{ airflow_database_engine_collation_for_ids }}{% endif %}
+
+# If SqlAlchemy should pool database connections.
+sql_alchemy_pool_enabled = {{ airflow_database_pool_enabled }}
+
+# The SqlAlchemy pool size is the maximum number of database connections
+# in the pool. 0 indicates no limit.
+sql_alchemy_pool_size = {{ airflow_database_pool_size }}
+
+# The maximum overflow size of the pool.
+# When the number of checked-out connections reaches the size set in pool_size,
+# additional connections will be returned up to this limit.
+# When those additional connections are returned to the pool, they are disconnected and discarded.
+# It follows then that the total number of simultaneous connections the pool will allow
+# is pool_size + max_overflow,
+# and the total number of "sleeping" connections the pool will allow is pool_size.
+# max_overflow can be set to ``-1`` to indicate no overflow limit;
+# no limit will be placed on the total number of concurrent connections. Defaults to ``10``.
+sql_alchemy_max_overflow = {{ airflow_database_max_overflow }}
+
+# The SqlAlchemy pool recycle is the number of seconds a connection
+# can be idle in the pool before it is invalidated. This config does
+# not apply to sqlite. If the number of DB connections is ever exceeded,
+# a lower config value will allow the system to recover faster.
+sql_alchemy_pool_recycle = {{ airflow_database_pool_recycle }}
+
+# Check connection at the start of each connection pool checkout.
+# Typically, this is a simple statement like "SELECT 1".
+# More information here:
+# https://docs.sqlalchemy.org/en/13/core/pooling.html#disconnect-handling-pessimistic
+sql_alchemy_pool_pre_ping = {{ airflow_database_pool_pre_ping }}
+
+# The schema to use for the metadata database.
+# SqlAlchemy supports databases with the concept of multiple schemas.
+sql_alchemy_schema = {{ airflow_database_schema }}
+
+# Import path for connect args in SqlAlchemy. Defaults to an empty dict.
+# This is useful when you want to configure db engine args that SqlAlchemy won't parse
+# in connection string.
+# See https://docs.sqlalchemy.org/en/13/core/engines.html#sqlalchemy.create_engine.params.connect_args
+# sql_alchemy_connect_args =
+{% if airflow_database_connect_args %}sql_alchemy_connect_args = {{ airflow_database_connect_args }}{% endif %}
+
+# Number of times the code should be retried in case of DB Operational Errors.
+# Not all transactions will be retried as it can cause undesired state.
+# Currently it is only used in ``DagFileProcessor.process_file`` to retry ``dagbag.sync_to_db``.
+max_db_retries = {{ airflow_max_db_retries }}
 
 [logging]
 # The folder where airflow should store its log files
@@ -373,7 +376,7 @@ enable_experimental_api = {{ airflow_enable_experimental_api }}
 # How to authenticate users of the API. See
 # https://airflow.apache.org/docs/apache-airflow/stable/security.html for possible values.
 # ("airflow.api.auth.backend.default" allows all requests for historic reasons)
-auth_backend = {{ airflow_auth_backend }}
+auth_backends = {{ airflow_auth_backend }}
 
 # Used to set the maximum page limit for API requests
 maximum_page_limit = {{ airflow_maximum_page_limit }}
@@ -971,7 +974,7 @@ offset_field = {{ airflow_offset_field }}
 use_ssl = {{ airflow_elasticsearch_configs_use_ssl }}
 verify_certs = {{ airflow_elasticsearch_configs_verify_certs }}
 
-[kubernetes]
+[kubernetes_executor]
 # Path to the YAML pod file. If set, all other kubernetes-related fields are ignored.
 pod_template_file = {{ airflow_kubernetes_pod_template_file }}
 
