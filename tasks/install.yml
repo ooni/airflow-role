@@ -54,7 +54,6 @@
     version: "{{ airflow_pip_version }}"
     virtualenv: "{{ airflow_app_home }}"
     virtualenv_python: "python{{ airflow_python_version | default(omit) }}"
-  with_items: "{{ airflow_required_python_packages }}"
 
 - name: Airflow | Installing Python pip dependencies
   become: true
