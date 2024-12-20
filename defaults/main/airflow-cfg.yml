@@ -2,7 +2,7 @@
 # AIRFLOW CONFIGURATION https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html
 # ------------------------------------------------------------------------------
 # [core]
-airflow_dags_folder: "{{ airflow_app_home }}/dags"
+airflow_dags_folder: "{{ airflow_dags_folder }}"
 airflow_hostname_callable: socket:getfqdn
 airflow_hostname_callable_v2: socket.getfqdn
 airflow_default_timezone: utc

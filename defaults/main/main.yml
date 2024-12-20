@@ -206,6 +206,7 @@ airflow_executable: "{{ airflow_app_home }}/bin/airflow"
 airflow_pip_executable: "pip3"
 airflow_user_home: "/var/lib/{{ airflow_user }}"
 airflow_app_home: "/opt/{{ airflow_app_name }}"
+airflow_dags_folder: "{{ airflow_app_home }}/dags"
 airflow_conf_path: "/etc/{{ airflow_app_name }}"
 airflow_pidfile_folder: "/run/{{ airflow_app_name }}"
 airflow_environment_file_folder: /etc/sysconfig
